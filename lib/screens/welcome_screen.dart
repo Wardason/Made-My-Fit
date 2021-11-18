@@ -17,10 +17,11 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
     return Scaffold(
       body: SizedBox.expand(
         child: Container(
-          alignment: Alignment.topCenter,
           decoration: BoxDecoration(
             image: DecorationImage(
-                image: AssetImage("assets/Test.jpg"), fit: BoxFit.cover),
+              image: AssetImage("assets/welcome_screen.jpg"),
+              fit: BoxFit.cover,
+            ),
           ),
           child: Padding(
             padding: EdgeInsets.only(bottom: 100.0),
