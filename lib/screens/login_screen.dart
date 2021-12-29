@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:made_my_fit/screens/registration_screen.dart';
+import 'welcome_screen.dart';
 
 class LoginScreen extends StatefulWidget {
   static const String id = 'login_screen';
@@ -10,6 +12,7 @@ class LoginScreen extends StatefulWidget {
 
 class _LoginScreenState extends State<LoginScreen> {
   bool isRememberMe = false;
+  Color accentColor = Color(0x99536878);
 
   Widget buildEmail() {
     return Column(
@@ -48,10 +51,10 @@ class _LoginScreenState extends State<LoginScreen> {
               contentPadding: EdgeInsets.only(top: 14),
               prefixIcon: Icon(
                 Icons.email,
-                color: Color(0x99536878),
+                color: accentColor,
               ),
               hintText: 'Email',
-              hintStyle: TextStyle(color: Colors.black38),
+              hintStyle: TextStyle(color: accentColor),
             ),
           ),
         ),
@@ -96,10 +99,10 @@ class _LoginScreenState extends State<LoginScreen> {
               contentPadding: EdgeInsets.only(top: 14),
               prefixIcon: Icon(
                 Icons.lock,
-                color: Color(0x99536878),
+                color: accentColor,
               ),
               hintText: 'Password',
-              hintStyle: TextStyle(color: Colors.black38),
+              hintStyle: TextStyle(color: accentColor),
             ),
           ),
         ),
@@ -116,7 +119,7 @@ class _LoginScreenState extends State<LoginScreen> {
         child: Text(
           'Forgot Password?',
           style: TextStyle(
-            color: Colors.white,
+            color: accentColor,
             fontWeight: FontWeight.bold,
           ),
         ),
@@ -130,7 +133,7 @@ class _LoginScreenState extends State<LoginScreen> {
       child: Row(
         children: <Widget>[
           Theme(
-            data: ThemeData(unselectedWidgetColor: Colors.white),
+            data: ThemeData(unselectedWidgetColor: accentColor),
             child: Checkbox(
               value: isRememberMe,
               checkColor: Colors.green,
@@ -147,7 +150,7 @@ class _LoginScreenState extends State<LoginScreen> {
           Text(
             'Remember me',
             style: TextStyle(
-              color: Colors.white,
+              color: accentColor,
               fontWeight: FontWeight.bold,
             ),
           ),
@@ -169,7 +172,7 @@ class _LoginScreenState extends State<LoginScreen> {
         child: Text(
           'LOGIN',
           style: TextStyle(
-            color: Color(0x99536878),
+            color: accentColor,
             fontSize: 18,
             fontWeight: FontWeight.bold,
           ),
@@ -180,14 +183,14 @@ class _LoginScreenState extends State<LoginScreen> {
 
   Widget buildSignUp() {
     return GestureDetector(
-      onTap: () => Navigator.pop(context),
+      onTap: () => Navigator.pushNamed(context, RegistrationScreen.id),
       child: RichText(
         text: TextSpan(
           children: [
             TextSpan(
               text: 'Don\'t have an Account? ',
               style: TextStyle(
-                color: Colors.white,
+                color: accentColor,
                 fontSize: 18,
                 fontWeight: FontWeight.w500,
               ),
@@ -195,7 +198,7 @@ class _LoginScreenState extends State<LoginScreen> {
             TextSpan(
               text: 'Sign Up',
               style: TextStyle(
-                color: Colors.white,
+                color: accentColor,
                 fontSize: 18,
                 fontWeight: FontWeight.bold,
               ),
@@ -212,67 +215,58 @@ class _LoginScreenState extends State<LoginScreen> {
       body: AnnotatedRegion<SystemUiOverlayStyle>(
         //TODO learn 1
         value: SystemUiOverlayStyle.light,
-        child: Stack(
-          children: <Widget>[
-            Container(
-              height: double.infinity,
-              width: double.infinity,
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                  colors: [
-                    Color(0x99536878),
-                    Color(0xcc1d1d1d),
-                    Color(0xff000000),
-                  ],
+        child: SizedBox.expand(
+          child: Stack(
+            children: <Widget>[
+              Container(
+                height: double.infinity,
+                width: double.infinity,
+                decoration: BoxDecoration(
+                  image: DecorationImage(
+                    image: AssetImage("assets/vanilla_screen.jpg"),
+                    fit: BoxFit.cover,
+                  ),
                 ),
-              ),
-              child: SingleChildScrollView(
-                //TODO learn 3
-                physics: AlwaysScrollableScrollPhysics(),
-                padding: EdgeInsets.symmetric(
-                  horizontal: 25,
-                  vertical: 120,
-                ),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    Text(
-                      'Sign In',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 40,
-                        fontWeight: FontWeight.bold,
+                child: SingleChildScrollView(
+                  //TODO learn 3
+                  physics: AlwaysScrollableScrollPhysics(),
+                  padding: EdgeInsets.symmetric(
+                    horizontal: 25,
+                    vertical: 120,
+                  ),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      Text(
+                        'Sign In',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 40,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
-                    ),
-                    SizedBox(height: 50),
-                    buildEmail(),
-                    SizedBox(height: 20),
-                    buildPassword(),
-                    buildForgotPassword(),
-                    buildRememberMe(),
-                    buildLogin(),
-                    buildSignUp(),
-                  ],
+                      SizedBox(height: 50),
+                      buildEmail(),
+                      SizedBox(height: 20),
+                      buildPassword(),
+                      buildForgotPassword(),
+                      buildRememberMe(),
+                      buildLogin(),
+                      buildSignUp(),
+                      SizedBox(height: 5),
+                      BackButton(
+                        color: accentColor,
+                        onPressed: () =>
+                            Navigator.pushNamed(context, WelcomeScreen.id),
+                      ),
+                    ],
+                  ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ), //TODO learn 2
       ),
     );
   }
 }
-
-/*
-ElevatedButton(
-style: ButtonStyle(
-backgroundColor:
-MaterialStateProperty.all<Color>(Colors.black54),
-),
-onPressed: () {
-Navigator.pop(context);
-},
-child: Text('Back'),
-),*/
