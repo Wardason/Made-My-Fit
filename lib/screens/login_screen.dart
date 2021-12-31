@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:made_my_fit/screens/registration_screen.dart';
+import 'package:firebase_auth/firebase_auth.dart' as auth;
+import 'home_screen.dart';
 import 'welcome_screen.dart';
+import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
 
 class LoginScreen extends StatefulWidget {
   static const String id = 'login_screen';
@@ -11,7 +14,11 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
+  final auth.FirebaseAuth _auth = auth.FirebaseAuth.instance;
+  late String email;
+  late String password;
   bool isRememberMe = false;
+  bool showSpinner = false;
   Color accentColor = Color(0x99536878);
 
   Widget buildEmail() {
@@ -44,6 +51,9 @@ class _LoginScreenState extends State<LoginScreen> {
           ),
           height: 60,
           child: TextField(
+            onChanged: (value) {
+              email = value;
+            },
             keyboardType: TextInputType.emailAddress,
             style: TextStyle(color: Colors.black87),
             decoration: InputDecoration(
@@ -92,6 +102,9 @@ class _LoginScreenState extends State<LoginScreen> {
           ),
           height: 60,
           child: TextField(
+            onChanged: (value) {
+              password = value;
+            },
             obscureText: true,
             style: TextStyle(color: Colors.black87),
             decoration: InputDecoration(
@@ -165,7 +178,23 @@ class _LoginScreenState extends State<LoginScreen> {
       width: double.infinity,
       child: RaisedButton(
         elevation: 5,
-        onPressed: () => print('Login Pressed'),
+        onPressed: () async {
+          setState(() {
+            showSpinner = true;
+          });
+          try {
+            final user = await _auth.signInWithEmailAndPassword(
+                email: email, password: password);
+            if (user != null) {
+              Navigator.pushNamed(context, HomeScreen.id);
+            }
+            setState(() {
+              showSpinner = false;
+            });
+          } catch (e) {
+            print(e);
+          }
+        },
         padding: EdgeInsets.all(15),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
         color: Colors.white,
@@ -212,60 +241,63 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: AnnotatedRegion<SystemUiOverlayStyle>(
-        //TODO learn 1
-        value: SystemUiOverlayStyle.light,
-        child: SizedBox.expand(
-          child: Stack(
-            children: <Widget>[
-              Container(
-                height: double.infinity,
-                width: double.infinity,
-                decoration: BoxDecoration(
-                  image: DecorationImage(
-                    image: AssetImage("assets/vanilla_screen.jpg"),
-                    fit: BoxFit.cover,
+      body: ModalProgressHUD(
+        inAsyncCall: showSpinner,
+        child: AnnotatedRegion<SystemUiOverlayStyle>(
+          //TODO learn 1
+          value: SystemUiOverlayStyle.light,
+          child: SizedBox.expand(
+            child: Stack(
+              children: <Widget>[
+                Container(
+                  height: double.infinity,
+                  width: double.infinity,
+                  decoration: BoxDecoration(
+                    image: DecorationImage(
+                      image: AssetImage("assets/vanilla_screen.jpg"),
+                      fit: BoxFit.cover,
+                    ),
                   ),
-                ),
-                child: SingleChildScrollView(
-                  //TODO learn 3
-                  physics: AlwaysScrollableScrollPhysics(),
-                  padding: EdgeInsets.symmetric(
-                    horizontal: 25,
-                    vertical: 120,
-                  ),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      Text(
-                        'Sign In',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 40,
-                          fontWeight: FontWeight.bold,
+                  child: SingleChildScrollView(
+                    //TODO learn 3
+                    physics: AlwaysScrollableScrollPhysics(),
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 25,
+                      vertical: 120,
+                    ),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        Text(
+                          'Sign In',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 40,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
-                      ),
-                      SizedBox(height: 50),
-                      buildEmail(),
-                      SizedBox(height: 20),
-                      buildPassword(),
-                      buildForgotPassword(),
-                      buildRememberMe(),
-                      buildLogin(),
-                      buildSignUp(),
-                      SizedBox(height: 5),
-                      BackButton(
-                        color: accentColor,
-                        onPressed: () =>
-                            Navigator.pushNamed(context, WelcomeScreen.id),
-                      ),
-                    ],
+                        SizedBox(height: 50),
+                        buildEmail(),
+                        SizedBox(height: 20),
+                        buildPassword(),
+                        buildForgotPassword(),
+                        buildRememberMe(),
+                        buildLogin(),
+                        buildSignUp(),
+                        SizedBox(height: 5),
+                        BackButton(
+                          color: accentColor,
+                          onPressed: () =>
+                              Navigator.pushNamed(context, WelcomeScreen.id),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
-              ),
-            ],
-          ),
-        ), //TODO learn 2
+              ],
+            ),
+          ), //TODO learn 2
+        ),
       ),
     );
   }

@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'login_screen.dart';
 import 'welcome_screen.dart';
+import 'home_screen.dart';
+import 'package:firebase_auth/firebase_auth.dart' as auth;
+import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
 
 class RegistrationScreen extends StatefulWidget {
   static const String id = 'registration_screen';
@@ -11,8 +14,13 @@ class RegistrationScreen extends StatefulWidget {
 }
 
 class _RegistrationScreenState extends State<RegistrationScreen> {
+  final auth.FirebaseAuth _auth = auth.FirebaseAuth.instance;
+  bool showSpinner = false;
   bool isRememberMe = false;
   Color accentColor = Color(0x99536878);
+  late String name;
+  late String email;
+  late String password;
 
   Widget buildName() {
     return Column(
@@ -44,6 +52,9 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
           ),
           height: 60,
           child: TextField(
+            onChanged: (value) {
+              name = value;
+            },
             style: TextStyle(color: Colors.black87),
             decoration: InputDecoration(
               border: InputBorder.none,
@@ -91,6 +102,9 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
           ),
           height: 60,
           child: TextField(
+            onChanged: (value) {
+              email = value;
+            },
             keyboardType: TextInputType.emailAddress,
             style: TextStyle(color: Colors.black87),
             decoration: InputDecoration(
@@ -139,6 +153,9 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
           ),
           height: 60,
           child: TextField(
+            onChanged: (value) {
+              password = value;
+            },
             obscureText: true,
             style: TextStyle(color: Colors.black87),
             decoration: InputDecoration(
@@ -189,18 +206,34 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
     );
   }
 
-  Widget buildLogin() {
+  Widget buildRegister() {
     return Container(
       padding: EdgeInsets.symmetric(vertical: 25),
       width: double.infinity,
       child: RaisedButton(
         elevation: 5,
-        onPressed: () => print('Login Pressed'),
+        onPressed: () async {
+          setState(() {
+            showSpinner = true;
+          });
+          try {
+            final newUser = await _auth.createUserWithEmailAndPassword(
+                email: email, password: password);
+            if (newUser != null) {
+              Navigator.pushNamed(context, HomeScreen.id);
+            }
+            setState(() {
+              showSpinner = false;
+            });
+          } catch (e) {
+            print(e);
+          }
+        },
         padding: EdgeInsets.all(15),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(15)),
         color: Colors.white,
         child: Text(
-          'SIGN UP',
+          'REGISTER',
           style: TextStyle(
             color: accentColor,
             fontSize: 18,
@@ -242,66 +275,67 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: AnnotatedRegion<SystemUiOverlayStyle>(
-        //TODO learn 1
-        value: SystemUiOverlayStyle.light,
-        child: SizedBox.expand(
-          child: Stack(
-            children: <Widget>[
-              Container(
-                height: double.infinity,
-                width: double.infinity,
-                decoration: BoxDecoration(
-                  image: DecorationImage(
-                    image: AssetImage("assets/vanilla_screen.jpg"),
-                    fit: BoxFit.cover,
+      body: ModalProgressHUD(
+        inAsyncCall: showSpinner,
+        child: AnnotatedRegion<SystemUiOverlayStyle>(
+          //TODO learn 1
+          value: SystemUiOverlayStyle.light,
+          child: SizedBox.expand(
+            child: Stack(
+              children: <Widget>[
+                Container(
+                  height: double.infinity,
+                  width: double.infinity,
+                  decoration: BoxDecoration(
+                    image: DecorationImage(
+                      image: AssetImage("assets/vanilla_screen.jpg"),
+                      fit: BoxFit.cover,
+                    ),
                   ),
-                ),
-                child: SingleChildScrollView(
-                  //TODO learn 3
-                  physics: AlwaysScrollableScrollPhysics(),
-                  padding: EdgeInsets.symmetric(
-                    horizontal: 25,
-                    vertical: 120,
-                  ),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      Text(
-                        'Sign Up',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 40,
-                          fontWeight: FontWeight.bold,
+                  child: SingleChildScrollView(
+                    //TODO learn 3
+                    physics: AlwaysScrollableScrollPhysics(),
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 25,
+                      vertical: 120,
+                    ),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        Text(
+                          'Sign Up',
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 40,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
-                      ),
-                      SizedBox(height: 50),
-                      buildName(),
-                      SizedBox(
-                        height: 20,
-                      ),
-                      buildEmail(),
-                      SizedBox(height: 20),
-                      buildPassword(),
-                      SizedBox(
-                        height: 10,
-                      ),
-                      buildAcceptTerms(),
-                      buildLogin(),
-                      buildSignIn(),
-                      SizedBox(height: 10),
-                      BackButton(
-                        color: accentColor,
-                        onPressed: () =>
-                            Navigator.pushNamed(context, WelcomeScreen.id),
-                      ),
-                    ],
+                        SizedBox(height: 50),
+                        buildName(),
+                        SizedBox(
+                          height: 20,
+                        ),
+                        buildEmail(),
+                        SizedBox(height: 20),
+                        buildPassword(),
+                        SizedBox(height: 10),
+                        buildAcceptTerms(),
+                        buildRegister(),
+                        buildSignIn(),
+                        SizedBox(height: 10),
+                        BackButton(
+                          color: accentColor,
+                          onPressed: () =>
+                              Navigator.pushNamed(context, WelcomeScreen.id),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
-              ),
-            ],
-          ),
-        ), //TODO learn 2
+              ],
+            ),
+          ), //TODO learn 2
+        ),
       ),
     );
   }
