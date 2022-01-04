@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:made_my_fit/screens/registration_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart' as auth;
 import 'home_screen.dart';
+import 'package:made_my_fit/constants.dart';
 import 'welcome_screen.dart';
 import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
 
@@ -15,11 +16,15 @@ class LoginScreen extends StatefulWidget {
 
 class _LoginScreenState extends State<LoginScreen> {
   final auth.FirebaseAuth _auth = auth.FirebaseAuth.instance;
-  late String email;
-  late String password;
+
   bool isRememberMe = false;
   bool showSpinner = false;
-  Color accentColor = Color(0x99536878);
+  String hintTextEmail = 'youremailhere@gmail.com';
+  String hintTextPassword = 'Password';
+  Color emailHintColor = accentColor;
+  Color passwordHintColor = accentColor;
+  late String email;
+  late String password;
 
   Widget buildEmail() {
     return Column(
@@ -63,8 +68,8 @@ class _LoginScreenState extends State<LoginScreen> {
                 Icons.email,
                 color: accentColor,
               ),
-              hintText: 'Email',
-              hintStyle: TextStyle(color: accentColor),
+              hintText: hintTextEmail,
+              hintStyle: TextStyle(color: emailHintColor),
             ),
           ),
         ),
@@ -114,8 +119,8 @@ class _LoginScreenState extends State<LoginScreen> {
                 Icons.lock,
                 color: accentColor,
               ),
-              hintText: 'Password',
-              hintStyle: TextStyle(color: accentColor),
+              hintText: hintTextPassword,
+              hintStyle: TextStyle(color: passwordHintColor),
             ),
           ),
         ),
@@ -185,12 +190,22 @@ class _LoginScreenState extends State<LoginScreen> {
           try {
             final user = await _auth.signInWithEmailAndPassword(
                 email: email, password: password);
+            //&& user.user!.emailVerified
             if (user != null) {
               Navigator.pushNamed(context, HomeScreen.id);
             }
             setState(() {
               showSpinner = false;
             });
+          } on auth.FirebaseAuthException catch (e) {
+            if (e.code == 'wrong-password') {
+              setState(() {
+                hintTextPassword = 'Password incorrect. Please try again';
+                passwordHintColor = Colors.red;
+                showSpinner = false;
+              });
+            }
+            print(e);
           } catch (e) {
             print(e);
           }

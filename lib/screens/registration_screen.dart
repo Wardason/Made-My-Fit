@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'login_screen.dart';
+import 'package:made_my_fit/constants.dart';
 import 'welcome_screen.dart';
 import 'home_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart' as auth;
@@ -17,7 +18,10 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
   final auth.FirebaseAuth _auth = auth.FirebaseAuth.instance;
   bool showSpinner = false;
   bool isRememberMe = false;
-  Color accentColor = Color(0x99536878);
+  String hintTextEmail = 'youremailhere@gmail.com';
+  String hintTextPassword = 'Password';
+  Color emailHintColor = accentColor;
+  Color passwordHintColor = accentColor;
   late String name;
   late String email;
   late String password;
@@ -114,8 +118,8 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                 Icons.email,
                 color: accentColor,
               ),
-              hintText: 'Email',
-              hintStyle: TextStyle(color: accentColor),
+              hintText: hintTextEmail,
+              hintStyle: TextStyle(color: emailHintColor),
             ),
           ),
         ),
@@ -165,8 +169,8 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                 Icons.lock,
                 color: accentColor,
               ),
-              hintText: 'Password',
-              hintStyle: TextStyle(color: accentColor),
+              hintText: hintTextPassword,
+              hintStyle: TextStyle(color: passwordHintColor),
             ),
           ),
         ),
@@ -220,11 +224,26 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
             final newUser = await _auth.createUserWithEmailAndPassword(
                 email: email, password: password);
             if (newUser != null) {
-              Navigator.pushNamed(context, HomeScreen.id);
+              //await newUser.user!.sendEmailVerification();
+              await Navigator.pushNamed(context, HomeScreen.id);
             }
             setState(() {
               showSpinner = false;
             });
+          } on auth.FirebaseAuthException catch (e) {
+            if (e.code == 'weak-password') {
+              setState(() {
+                hintTextPassword = 'Your password is too weak';
+                passwordHintColor = Colors.red;
+                showSpinner = false;
+              });
+            } else if (e.code == 'email-already-in-use') {
+              setState(() {
+                hintTextEmail = 'A user with this email already exists';
+                emailHintColor = Colors.red;
+                showSpinner = false;
+              });
+            }
           } catch (e) {
             print(e);
           }
