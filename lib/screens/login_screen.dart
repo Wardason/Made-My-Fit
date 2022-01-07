@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:made_my_fit/screens/registration_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart' as auth;
-import 'home_screen.dart';
+import 'bottomBar_screen.dart';
 import 'package:made_my_fit/constants.dart';
 import 'welcome_screen.dart';
 import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
@@ -192,7 +192,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 email: email, password: password);
             //&& user.user!.emailVerified
             if (user != null) {
-              Navigator.pushNamed(context, HomeScreen.id);
+              Navigator.pushNamed(context, BottomBar.id);
             }
             setState(() {
               showSpinner = false;

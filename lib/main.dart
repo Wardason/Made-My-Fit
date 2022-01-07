@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:made_my_fit/screens/home_screen.dart';
-import 'screens/welcome_screen.dart';
-import 'screens/login_screen.dart';
-import 'screens/registration_screen.dart';
+import 'package:made_my_fit/screens/bottomBar_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'screens/all_imports.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -20,7 +18,11 @@ class MadeMyFit extends StatelessWidget {
         WelcomeScreen.id: (context) => WelcomeScreen(),
         RegistrationScreen.id: (context) => RegistrationScreen(),
         LoginScreen.id: (context) => LoginScreen(),
+        BottomBar.id: (context) => BottomBar(),
         HomeScreen.id: (context) => HomeScreen(),
+        ModelScreen.id: (context) => ModelScreen(),
+        WardrobeScreen.id: (context) => WardrobeScreen(),
+        SettingScreen.id: (context) => SettingScreen(),
       },
     );
   }

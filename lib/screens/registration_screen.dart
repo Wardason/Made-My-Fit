@@ -3,7 +3,7 @@ import 'package:flutter/services.dart';
 import 'login_screen.dart';
 import 'package:made_my_fit/constants.dart';
 import 'welcome_screen.dart';
-import 'home_screen.dart';
+import 'bottomBar_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart' as auth;
 import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
 
@@ -224,8 +224,8 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
             final newUser = await _auth.createUserWithEmailAndPassword(
                 email: email, password: password);
             if (newUser != null) {
-              //await newUser.user!.sendEmailVerification();
-              await Navigator.pushNamed(context, HomeScreen.id);
+              await Navigator.pushNamed(context, BottomBar.id);
+              print('Logged in');
             }
             setState(() {
               showSpinner = false;
@@ -243,6 +243,9 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                 emailHintColor = Colors.red;
                 showSpinner = false;
               });
+            } else {
+              print(e);
+              print('fuck off');
             }
           } catch (e) {
             print(e);
