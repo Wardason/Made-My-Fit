@@ -54,14 +54,14 @@ class _BottomBarState extends State<BottomBar> {
           textAlign: TextAlign.center,
         ),
         BottomNavyBarItem(
-          icon: Icon(Icons.whatshot),
-          title: Text('Model'),
+          icon: Icon(Icons.add),
+          title: Text('Add'),
           activeColor: Colors.purpleAccent,
           inactiveColor: _inactiveColor,
           textAlign: TextAlign.center,
         ),
         BottomNavyBarItem(
-          icon: Icon(Icons.android),
+          icon: Icon(Icons.whatshot),
           title: Text('wardrobe '),
           activeColor: Colors.pink,
           inactiveColor: _inactiveColor,
