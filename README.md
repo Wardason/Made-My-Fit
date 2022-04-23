@@ -1,16 +1,14 @@
-# made_my_fit
+# Made my fit
+Made my fit relieves you of the daily decision of what to wear. It creates many different combinations from few clothes.
 
-A new Flutter project.
+## Features
+- Sign Up and login with Firebase 
 
-## Getting Started
+## Userinterface
+![1](https://github.com/Wardason/Couple-Counter/blob/main/userinterface/ui-1.PNG)
+![2](https://github.com/Wardason/Couple-Counter/blob/main/userinterface/ui-2.PNG)
+![3](https://github.com/Wardason/Couple-Counter/blob/main/userinterface/ui-3.PNG)
+![4](https://github.com/Wardason/Couple-Counter/blob/main/userinterface/ui-4.PNG)
 
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
-
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+## Outro
+This app is in an early station of his develop, but if you have any questions about the app or the future about the app feel free to ask.
